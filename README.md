@@ -32,6 +32,27 @@ It is designed to help creators, users, and platforms see the same structure fro
 
 ---
 
+## Triadic Circulation View
+
+Seismic Score Dashboard は、発信者・利用者・プラットフォームの三者を、  
+同じ価値地図の上で観測するための仕様です。
+
+<p align="center">
+  <img src="docs/triadic-circulation.svg" alt="発信者・利用者・プラットフォームの三者循環図" width="100%">
+</p>
+
+この図は、
+
+- 発信者が震源を置き、
+- 利用者がそれを選び、使い、共鳴し、
+- プラットフォームが利用痕跡を保持し、
+- Dashboard がその循環を読み取り、
+- 後段の governance / Royalty OS が還元判断へ接続する
+
+という全体の流れを示しています。
+
+---
+
 ## Why This Exists
 
 AI時代では、価値は「作品そのもの」だけでなく、  
@@ -189,6 +210,7 @@ self-loop inflation
 Repository Structure
 .
 ├── README.md
+├── LICENSE
 ├── spec/
 │   └── seismic-score-dashboard-v0.1.yaml
 ├── schemas/
@@ -200,11 +222,14 @@ Repository Structure
 │   ├── anti-gaming-rules.md
 │   ├── dispute-handling-notes.md
 │   ├── dispute-registry-relationship.md
+│   ├── governance-bridge-notes.md
 │   ├── one-page-overview.md
 │   ├── relationship-to-royalty-os.md
 │   ├── relationship-to-trace-architecture.md
 │   ├── review-status-notes.md
-│   └── scoring-model.md
+│   ├── scoring-model.md
+│   ├── triadic-circulation.dot
+│   └── triadic-circulation.svg
 └── .github/
     └── workflows/
         └── validate-specs.yml
@@ -237,6 +262,12 @@ docs/review-status-notes.md
 score がどの程度レビュー済みかを示す review status の設計メモです。
 docs/dispute-registry-relationship.md
 Dispute Registry を異議の台帳、Dashboard を影響表示層として切り分ける接続文書です。
+docs/governance-bridge-notes.md
+score / readiness / dispute / review を後段の制度判断へ安全に渡すための橋渡しメモです。
+docs/triadic-circulation.dot
+発信者・利用者・プラットフォームの三者循環図を定義する Graphviz ソースです。
+docs/triadic-circulation.svg
+README 表示用に出力した三者循環図です。
 .github/workflows/validate-specs.yml
 YAML spec の読込確認と、JSON Schema / sample record の自動検証を行う GitHub Actions workflow です。
 Start Here
@@ -294,6 +325,7 @@ GitHub Actions 上での validation flow
 docs/dispute-handling-notes.md
 docs/allocation-readiness.md
 docs/review-status-notes.md
+docs/governance-bridge-notes.md
 docs/dispute-registry-relationship.md
 
 ここで、
@@ -301,6 +333,7 @@ docs/dispute-registry-relationship.md
 異議がある場合どう扱うか
 readiness をどう読むか
 review 状態をどう見せるか
+score をどう制度判断へ渡すか
 dispute registry とどう接続するか
 
 がつながります。
@@ -312,16 +345,29 @@ dispute registry とどう接続するか
 docs/relationship-to-trace-architecture.md
 docs/relationship-to-royalty-os.md
 docs/dispute-registry-relationship.md
+docs/governance-bridge-notes.md
 
 ここで、Seismic Score Dashboard が
 
 Trace Architecture の上に立つ観測層であり
 Royalty OS の前段にある pre-allocation layer であり
-Dispute Registry と接続する影響表示層である
+Dispute Registry と接続する影響表示層であり
+Governance Bridge を通って制度判断へ渡される
 
 ことが整理できます。
 
-6. Minimal practical route
+6. Visual entry
+
+最初に図から入りたい場合:
+
+docs/triadic-circulation.svg
+docs/one-page-overview.md
+docs/scoring-model.md
+
+この順番なら、
+三者循環の全体像を見てから、仕様の骨格へ自然に入れます。
+
+7. Minimal practical route
 
 最短で仕様の雰囲気だけ掴みたい場合:
 
@@ -430,6 +476,8 @@ if errors:
 
 print("OK: Seismic Score Dashboard sample is valid.")
 PY
+Render the triadic diagram locally
+dot -Tsvg docs/triadic-circulation.dot -o docs/triadic-circulation.svg
 What this validates
 
 この検証では主に以下を確認します。
@@ -517,8 +565,8 @@ Roadmap
 複数レコード用の collection schema
 可視化用ダッシュボード定義
 allocation simulation 層の拡張
-governance bridge 関連文書
 review / audit 補助フィールドの拡張
+governance bridge と downstream handoff の明文化強化
 Relationship to Royalty OS
 
 Seismic Score Dashboard は、
@@ -537,6 +585,7 @@ Seismic Score Dashboard は、
 
 Trace 系仕様が「痕跡を記録する」
 Seismic Score Dashboard が「痕跡を観測・整理する」
+Governance Bridge が「制度判断へ整流する」
 Royalty OS が「還元を制度化する」
 
 という接続が想定されます。
