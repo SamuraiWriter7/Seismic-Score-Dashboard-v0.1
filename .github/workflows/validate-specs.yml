@@ -1,0 +1,144 @@
+name: Validate Specs
+
+on:
+  push:
+    paths:
+      - "README.md"
+      - "spec/**"
+      - "schemas/**"
+      - "examples/**"
+      - ".github/workflows/validate-specs.yml"
+  pull_request:
+    paths:
+      - "README.md"
+      - "spec/**"
+      - "schemas/**"
+      - "examples/**"
+      - ".github/workflows/validate-specs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema PyYAML
+
+      - name: Debug file tree
+        run: |
+          echo "=== Repository file tree ==="
+          find . -maxdepth 3 -type f | sort
+
+      - name: Validate Seismic Score Dashboard repository
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          import yaml
+          from jsonschema import Draft202012Validator
+
+          failed = False
+
+          print("=== Validating Seismic Score Dashboard repository ===")
+
+          def load_json(path: Path):
+              with path.open("r", encoding="utf-8") as f:
+                  return json.load(f)
+
+          def load_yaml(path: Path):
+              with path.open("r", encoding="utf-8") as f:
+                  return yaml.safe_load(f)
+
+          print("\n=== Validating YAML specification ===")
+          spec_path = Path("spec/seismic-score-dashboard-v0.1.yaml")
+
+          if not spec_path.exists():
+              print(f"ERROR: Spec file not found: {spec_path}")
+              failed = True
+          else:
+              try:
+                  spec = load_yaml(spec_path)
+                  if spec is None:
+                      print(f"ERROR: YAML spec is empty: {spec_path}")
+                      failed = True
+                  else:
+                      print(f"OK: YAML spec is readable: {spec_path}")
+              except yaml.YAMLError as e:
+                  print(f"ERROR: Invalid YAML in spec {spec_path}: {e}")
+                  failed = True
+              except Exception as e:
+                  print(f"ERROR: Failed to read spec {spec_path}: {e}")
+                  failed = True
+
+          print("\n=== Validating Seismic Score Dashboard v0.1 ===")
+          schema_path = Path("schemas/seismic-score-dashboard-v0.1.schema.json")
+          sample_path = Path("examples/seismic-score-dashboard.sample.json")
+
+          schema = None
+          sample = None
+
+          if not schema_path.exists():
+              print(f"ERROR: Schema file not found: {schema_path}")
+              failed = True
+          else:
+              try:
+                  schema = load_json(schema_path)
+              except json.JSONDecodeError as e:
+                  print(f"ERROR: Invalid JSON in schema {schema_path}: {e}")
+                  failed = True
+              except Exception as e:
+                  print(f"ERROR: Failed to read schema {schema_path}: {e}")
+                  failed = True
+
+          if not sample_path.exists():
+              print(f"ERROR: Sample file not found: {sample_path}")
+              failed = True
+          else:
+              try:
+                  sample = load_json(sample_path)
+              except json.JSONDecodeError as e:
+                  print(f"ERROR: Invalid JSON in sample {sample_path}: {e}")
+                  failed = True
+              except Exception as e:
+                  print(f"ERROR: Failed to read sample {sample_path}: {e}")
+                  failed = True
+
+          if schema is not None and sample is not None:
+              try:
+                  Draft202012Validator.check_schema(schema)
+                  validator = Draft202012Validator(schema)
+                  errors = sorted(validator.iter_errors(sample), key=lambda e: list(e.path))
+
+                  if errors:
+                      print(f"ERROR: Validation failed for {sample_path}")
+                      for err in errors:
+                          path = ".".join(str(p) for p in err.path) or "(root)"
+                          print(f" - {path}: {err.message}")
+                      failed = True
+                  else:
+                      print("OK: Seismic Score Dashboard v0.1 sample is valid.")
+              except Exception as e:
+                  print(f"ERROR: Failed to validate Seismic Score Dashboard v0.1: {e}")
+                  failed = True
+
+          if failed:
+              print("\nValidation failed.")
+              raise SystemExit(1)
+
+          print("\nAll validations passed.")
+          PY
