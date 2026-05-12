@@ -3,17 +3,25 @@ digraph SeismicScoreTriadicCirculation {
     rankdir=LR,
     labelloc="t",
     label="Seismic Score Dashboard v0.1\n発信者・利用者・プラットフォームの三者循環図",
-    fontsize=20
+    fontsize=20,
+    pad=0.3,
+    nodesep=0.5,
+    ranksep=0.8
   ];
 
   node [
     shape=box,
     style="rounded,filled",
-    fillcolor="white"
+    fillcolor="white",
+    color="#666666",
+    fontname="Helvetica"
   ];
 
   edge [
-    arrowsize=0.8
+    color="#666666",
+    arrowsize=0.8,
+    fontname="Helvetica",
+    fontsize=10
   ];
 
   Creator [
@@ -27,19 +35,19 @@ digraph SeismicScoreTriadicCirculation {
   ];
 
   Platform [
-    label="プラットフォーム\n\n・利用を計測する\n・引用/trace を保持する\n・還元候補を管理する",
+    label="プラットフォーム\n\n・利用を計測する\n・引用 / trace を保持する\n・還元候補を管理する",
     fillcolor="#f6f8fa"
+  ];
+
+  TraceLayer [
+    label="Trace / Provenance Layer\n\nアクセス・引用・派生・監査の痕跡",
+    fillcolor="#fff7e6"
   ];
 
   Dashboard [
     label="Seismic Score Dashboard\n\nOrigin / Trace / Resonance /\nPurity / Return",
     shape=ellipse,
     fillcolor="#eaf3ff"
-  ];
-
-  TraceLayer [
-    label="Trace / Provenance Layer\n\nアクセス・引用・派生・監査の痕跡",
-    fillcolor="#fff7e6"
   ];
 
   GovernanceBridge [
@@ -53,7 +61,7 @@ digraph SeismicScoreTriadicCirculation {
   ];
 
   Creator -> Platform [label="公開 / 投稿 / 定義配置"];
-  Creator -> TraceLayer [label="起点情報 / 構造ID / 初出痕跡"];
+  Creator -> TraceLayer [label="起点情報 / 初出痕跡"];
 
   User -> Platform [label="検索 / 参照 / 利用"];
   User -> TraceLayer [label="利用痕跡 / citation / ingestion"];
@@ -76,3 +84,11 @@ digraph SeismicScoreTriadicCirculation {
   User -> Creator [label="利用 / 共鳴 / 派生", style=dashed];
   Platform -> Creator [label="可視化 / 分析 / 候補通知", style=dashed];
 }
+
+SVG化するならコマンドはこれです。
+
+dot -Tsvg docs/triadic-circulation.dot -o docs/triadic-circulation.svg
+
+PNGならこちらです。
+
+dot -Tpng docs/triadic-circulation.dot -o docs/triadic-circulation.png
