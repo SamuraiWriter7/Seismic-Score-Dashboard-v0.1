@@ -1,0 +1,81 @@
+{
+  "source_id": "kazene-shingen-0001",
+  "source_type": "spec",
+  "title": "Kazene構造論──問い・共鳴・痕跡のAI文明哲学",
+  "structure_id": "KAZENE-CORE-001",
+  "tags": [
+    "kazene",
+    "seismic",
+    "royalty-os",
+    "trace"
+  ],
+  "origin": {
+    "author": "Shidenkai Alpha",
+    "co_authors": [],
+    "first_published_at": "2026-05-12T09:00:00+09:00",
+    "platform": "note",
+    "url": "https://example.org/kazene-core",
+    "provenance_hash": "sha256:8b7d4c1f1f5f5b4d7a7f9f0e1234567890abcdef1234567890abcdef12345678",
+    "commit_or_revision_id": "rev-0001",
+    "archive_url": "https://archive.example.org/kazene-core"
+  },
+  "metrics": {
+    "token_usage": {
+      "input_tokens_consumed": 182340,
+      "output_tokens_generated": 73420,
+      "cache_tokens_reused": 50210,
+      "agent_task_count": 48,
+      "search_reference_count": 22,
+      "rag_ingestion_count": 9
+    },
+    "citations": {
+      "citation_count": 128,
+      "cited_platforms": [
+        "note",
+        "github",
+        "medium"
+      ],
+      "source_quality_weight": 0.92
+    },
+    "resonance": {
+      "derivative_count": 34,
+      "reinterpretation_count": 12,
+      "cross_platform_count": 5,
+      "continued_reference_rate": 0.68,
+      "downstream_depth_score": 41
+    },
+    "purity_signals": {
+      "heading_body_alignment": 94,
+      "definition_clarity": 91,
+      "redundancy_score": 82,
+      "qa_decomposability": 93,
+      "diagrammability": 88,
+      "terminology_stability": 95,
+      "structure_id_presence": true
+    }
+  },
+  "scores": {
+    "origin_score": 91,
+    "trace_score": 84,
+    "resonance_score": 88,
+    "purity_score": 93,
+    "return_score": 79,
+    "penalty_total": 4.6,
+    "seismic_score": 82.95
+  },
+  "governance": {
+    "attribution_confidence": 92,
+    "evidence_strength": 90,
+    "trace_continuity": 85,
+    "dispute_status": "none",
+    "audit_status": "mixed_reviewed",
+    "anomaly_flags": []
+  },
+  "allocation": {
+    "qcoin_estimate": 1240,
+    "fiat_estimate": 0,
+    "allocation_ratio": 0.18,
+    "allocation_status": "proposed",
+    "allocation_note": "初期観測段階のため暫定提案値"
+  }
+}
