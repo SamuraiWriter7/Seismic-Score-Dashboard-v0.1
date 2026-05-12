@@ -1,0 +1,437 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/seismic-score-dashboard-v0.1.schema.json",
+  "title": "Seismic Score Dashboard v0.1",
+  "description": "震源スコア・ダッシュボード v0.1 の標準レコードを検証する JSON Schema。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id",
+    "source_type",
+    "title",
+    "origin",
+    "metrics",
+    "scores",
+    "governance",
+    "allocation"
+  ],
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "震源対象を一意に識別するID"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "article",
+        "spec",
+        "repo",
+        "note_post",
+        "medium_post",
+        "x_post",
+        "gpt_instruction",
+        "diagram",
+        "book"
+      ],
+      "description": "対象の種類"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "対象タイトル"
+    },
+    "structure_id": {
+      "type": "string",
+      "description": "構造ID。概念単位の追跡に使う任意ID"
+    },
+    "tags": {
+      "type": "array",
+      "description": "主題ラベル群",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "origin": {
+      "$ref": "#/$defs/origin"
+    },
+    "metrics": {
+      "$ref": "#/$defs/metrics"
+    },
+    "scores": {
+      "$ref": "#/$defs/scores"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "allocation": {
+      "$ref": "#/$defs/allocation"
+    }
+  },
+  "$defs": {
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author",
+        "first_published_at",
+        "platform",
+        "url"
+      ],
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "co_authors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "default": []
+        },
+        "first_published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "provenance_hash": {
+          "type": "string"
+        },
+        "commit_or_revision_id": {
+          "type": "string"
+        },
+        "archive_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "token_usage",
+        "citations",
+        "resonance",
+        "purity_signals"
+      ],
+      "properties": {
+        "token_usage": {
+          "$ref": "#/$defs/token_usage"
+        },
+        "citations": {
+          "$ref": "#/$defs/citations"
+        },
+        "resonance": {
+          "$ref": "#/$defs/resonance"
+        },
+        "purity_signals": {
+          "$ref": "#/$defs/purity_signals"
+        }
+      }
+    },
+    "token_usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_tokens_consumed",
+        "output_tokens_generated",
+        "cache_tokens_reused"
+      ],
+      "properties": {
+        "input_tokens_consumed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_tokens_generated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cache_tokens_reused": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agent_task_count": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "search_reference_count": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "rag_ingestion_count": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        }
+      }
+    },
+    "citations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "citation_count"
+      ],
+      "properties": {
+        "citation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cited_platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "default": []
+        },
+        "source_quality_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1.0
+        }
+      }
+    },
+    "resonance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derivative_count",
+        "cross_platform_count"
+      ],
+      "properties": {
+        "derivative_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reinterpretation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "cross_platform_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "continued_reference_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        },
+        "downstream_depth_score": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        }
+      }
+    },
+    "purity_signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heading_body_alignment",
+        "definition_clarity",
+        "terminology_stability"
+      ],
+      "properties": {
+        "heading_body_alignment": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "definition_clarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "redundancy_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "qa_decomposability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "diagrammability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "terminology_stability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "structure_id_presence": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin_score",
+        "trace_score",
+        "resonance_score",
+        "purity_score",
+        "return_score",
+        "penalty_total",
+        "seismic_score"
+      ],
+      "properties": {
+        "origin_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "trace_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "resonance_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "purity_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "return_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "penalty_total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "seismic_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attribution_confidence",
+        "evidence_strength",
+        "dispute_status",
+        "audit_status"
+      ],
+      "properties": {
+        "attribution_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "evidence_strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "trace_continuity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "dispute_status": {
+          "type": "string",
+          "enum": [
+            "none",
+            "pending",
+            "disputed",
+            "resolved",
+            "superseded"
+          ]
+        },
+        "audit_status": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "machine_reviewed",
+            "human_reviewed",
+            "mixed_reviewed"
+          ]
+        },
+        "anomaly_flags": {
+          "type": "array",
+          "description": "自己循環引用・短時間大量参照などの警告フラグ",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "default": []
+        }
+      }
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allocation_status"
+      ],
+      "properties": {
+        "qcoin_estimate": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "fiat_estimate": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "allocation_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        },
+        "allocation_status": {
+          "type": "string",
+          "enum": [
+            "not_ready",
+            "proposed",
+            "pending_review",
+            "approved",
+            "distributed",
+            "withheld"
+          ]
+        },
+        "allocation_note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
