@@ -1,0 +1,597 @@
+spec:
+  id: seismic-score-dashboard-v0.1
+  title: Seismic Score Dashboard v0.1
+  version: "0.1.0"
+  status: draft
+  language: ja
+  authors:
+    - name: Shidenkai Alpha
+      role: origin-designer
+  license: CC-BY-4.0
+  summary: >
+    知の起点・利用量・引用・派生・共鳴・分配候補を可視化し、
+    発信者・利用者・プラットフォームの三者が同じ価値地図を共有するための観測仕様。
+  one_line_definition: >
+    震源スコア・ダッシュボードとは、知の震源性・利用痕跡・共鳴・構造純度・還元可能性を
+    同一座標系で観測し、価値循環の判断材料を提供するための観測UI仕様である。
+
+design_principles:
+  - id: structure_over_surface
+    label: Structure over Surface
+    description: 表層的な人気や瞬間的なバズより、構造の明確性・再利用性・追跡可能性を重視する。
+  - id: trace_before_reward
+    label: Trace before Reward
+    description: 分配の前に、利用痕跡と帰属信頼度を観測・整理する。
+  - id: resonance_over_raw_volume
+    label: Resonance over Raw Volume
+    description: 単純な閲覧量ではなく、派生・再定義・継続参照などの深い共鳴を重視する。
+  - id: explainable_scoring
+    label: Explainable Scoring
+    description: 総合スコアは内訳に分解でき、算定理由が説明可能でなければならない。
+  - id: governance_ready
+    label: Governance Ready
+    description: 異議申し立て・保留・再計算・監査に耐える構造を前提とする。
+
+intended_use:
+  primary:
+    - 発信者が、自身の知のどの部分が震源化しているかを把握する
+    - 利用者が、良質な震源を効率よく選定する
+    - プラットフォームが、将来的な分配・監査・帰属処理の基礎データとして利用する
+  non_goals:
+    - 法的著作権判定そのものを自動確定すること
+    - 真偽判定や思想の優劣判定を行うこと
+    - 人気投票や単純ランキングのみを目的とすること
+
+score_layers:
+  - id: origin
+    label: Origin
+    weight: 0.25
+    description: その知がどれだけ起点として明確かを示す層
+    inputs:
+      - first_published_at
+      - first_published_platform
+      - originality_delta
+      - structure_consistency
+      - provenance_chain_strength
+      - origin_confidence
+  - id: trace
+    label: Trace
+    weight: 0.20
+    description: どれだけ利用・参照・取り込みが発生したかを示す層
+    inputs:
+      - input_tokens_consumed
+      - output_tokens_generated
+      - cache_tokens_reused
+      - search_reference_count
+      - citation_count
+      - rag_ingestion_count
+      - derivative_embedding_count
+  - id: resonance
+    label: Resonance
+    weight: 0.20
+    description: その知が次の知や派生構造を生んだ度合いを示す層
+    inputs:
+      - derivative_count
+      - reinterpretation_count
+      - cross_platform_count
+      - continued_reference_rate
+      - downstream_depth_score
+  - id: purity
+    label: Purity
+    weight: 0.20
+    description: AIや人間が扱いやすい構造純度を示す層
+    inputs:
+      - heading_body_alignment
+      - definition_clarity
+      - redundancy_score
+      - qa_decomposability
+      - diagrammability
+      - structure_id_presence
+      - terminology_stability
+  - id: return
+    label: Return
+    weight: 0.15
+    description: 分配候補として制度的に扱いやすい度合いを示す層
+    inputs:
+      - attribution_confidence
+      - evidence_strength
+      - trace_continuity
+      - dispute_status
+      - allocation_readiness
+
+penalty_model:
+  description: 総合スコアから減点される要因群
+  factors:
+    - id: ambiguous_attribution
+      label: 曖昧な帰属
+    - id: weak_provenance
+      label: provenance不足
+    - id: duplication_excess
+      label: 重複率過多
+    - id: structural_breakage
+      label: 構造崩れ
+    - id: short_term_buzz_bias
+      label: 短期バズ偏重
+    - id: unresolved_dispute
+      label: 未解決異議
+    - id: self_loop_inflation
+      label: 自己循環による不自然な加点
+  scoring_rule: >
+    penalty_total は 0 以上 100 以下の補正値とし、
+    総合スコア算出時に減算される。
+
+score_formula:
+  description: 総合震源スコアの基礎計算式
+  formula: >
+    seismic_score =
+    (origin * 0.25) +
+    (trace * 0.20) +
+    (resonance * 0.20) +
+    (purity * 0.20) +
+    (return * 0.15) -
+    penalty_total
+  score_range:
+    min: 0
+    max: 100
+  normalization: >
+    各層スコアは 0-100 に正規化してから合成する。
+  recommendation: >
+    総合点だけでなく、各層の内訳を必ず併記すること。
+
+dashboard_views:
+  - id: creator_view
+    label: 発信者ビュー
+    primary_focus:
+      - どの定義・記事・仕様が震源化しているか
+      - どの構造がAIに消費されやすいか
+      - どこで派生と共鳴が起きているか
+  - id: user_view
+    label: 利用者ビュー
+    primary_focus:
+      - 一次震源への近さ
+      - コスト効率
+      - 定義の明快さ
+      - 更新鮮度
+  - id: platform_view
+    label: プラットフォームビュー
+    primary_focus:
+      - 分配候補の計量
+      - 異常検知
+      - 二重計上防止
+      - 監査・異議処理
+
+record_model:
+  description: 1つの震源対象に対応する標準レコード
+  required_fields:
+    - source_id
+    - source_type
+    - title
+    - origin
+    - metrics
+    - scores
+    - governance
+    - allocation
+  fields:
+    source_id:
+      type: string
+      description: 震源対象を一意に識別するID
+      example: kazene-shingen-0001
+    source_type:
+      type: string
+      enum:
+        - article
+        - spec
+        - repo
+        - note_post
+        - medium_post
+        - x_post
+        - gpt_instruction
+        - diagram
+        - book
+      description: 対象の種類
+    title:
+      type: string
+      description: 対象タイトル
+    structure_id:
+      type: string
+      nullable: true
+      description: 構造ID。概念単位の追跡に使う任意ID
+    tags:
+      type: array
+      items: string
+      description: 主題ラベル群
+    origin:
+      type: object
+      required:
+        - author
+        - first_published_at
+        - platform
+        - url
+      fields:
+        author:
+          type: string
+        co_authors:
+          type: array
+          items: string
+        first_published_at:
+          type: datetime
+        platform:
+          type: string
+        url:
+          type: string
+        provenance_hash:
+          type: string
+          nullable: true
+        commit_or_revision_id:
+          type: string
+          nullable: true
+        archive_url:
+          type: string
+          nullable: true
+    metrics:
+      type: object
+      required:
+        - token_usage
+        - citations
+        - resonance
+        - purity_signals
+      fields:
+        token_usage:
+          type: object
+          required:
+            - input_tokens_consumed
+            - output_tokens_generated
+            - cache_tokens_reused
+          fields:
+            input_tokens_consumed:
+              type: integer
+              minimum: 0
+            output_tokens_generated:
+              type: integer
+              minimum: 0
+            cache_tokens_reused:
+              type: integer
+              minimum: 0
+            agent_task_count:
+              type: integer
+              minimum: 0
+              default: 0
+            search_reference_count:
+              type: integer
+              minimum: 0
+              default: 0
+            rag_ingestion_count:
+              type: integer
+              minimum: 0
+              default: 0
+        citations:
+          type: object
+          required:
+            - citation_count
+          fields:
+            citation_count:
+              type: integer
+              minimum: 0
+            cited_platforms:
+              type: array
+              items: string
+            source_quality_weight:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 1.0
+        resonance:
+          type: object
+          required:
+            - derivative_count
+            - cross_platform_count
+          fields:
+            derivative_count:
+              type: integer
+              minimum: 0
+            reinterpretation_count:
+              type: integer
+              minimum: 0
+              default: 0
+            cross_platform_count:
+              type: integer
+              minimum: 0
+            continued_reference_rate:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0
+            downstream_depth_score:
+              type: number
+              minimum: 0
+              default: 0
+        purity_signals:
+          type: object
+          required:
+            - heading_body_alignment
+            - definition_clarity
+            - terminology_stability
+          fields:
+            heading_body_alignment:
+              type: number
+              minimum: 0
+              maximum: 100
+            definition_clarity:
+              type: number
+              minimum: 0
+              maximum: 100
+            redundancy_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            qa_decomposability:
+              type: number
+              minimum: 0
+              maximum: 100
+            diagrammability:
+              type: number
+              minimum: 0
+              maximum: 100
+            terminology_stability:
+              type: number
+              minimum: 0
+              maximum: 100
+            structure_id_presence:
+              type: boolean
+              default: false
+    scores:
+      type: object
+      required:
+        - origin_score
+        - trace_score
+        - resonance_score
+        - purity_score
+        - return_score
+        - penalty_total
+        - seismic_score
+      fields:
+        origin_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        trace_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        resonance_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        purity_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        return_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        penalty_total:
+          type: number
+          minimum: 0
+          maximum: 100
+        seismic_score:
+          type: number
+          minimum: 0
+          maximum: 100
+    governance:
+      type: object
+      required:
+        - attribution_confidence
+        - evidence_strength
+        - dispute_status
+        - audit_status
+      fields:
+        attribution_confidence:
+          type: number
+          minimum: 0
+          maximum: 100
+        evidence_strength:
+          type: number
+          minimum: 0
+          maximum: 100
+        trace_continuity:
+          type: number
+          minimum: 0
+          maximum: 100
+        dispute_status:
+          type: string
+          enum:
+            - none
+            - pending
+            - disputed
+            - resolved
+            - superseded
+        audit_status:
+          type: string
+          enum:
+            - unreviewed
+            - machine_reviewed
+            - human_reviewed
+            - mixed_reviewed
+        anomaly_flags:
+          type: array
+          items: string
+          description: 自己循環引用・短時間大量参照などの警告フラグ
+    allocation:
+      type: object
+      required:
+        - allocation_status
+      fields:
+        qcoin_estimate:
+          type: number
+          minimum: 0
+          default: 0
+        fiat_estimate:
+          type: number
+          minimum: 0
+          default: 0
+        allocation_ratio:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0
+        allocation_status:
+          type: string
+          enum:
+            - not_ready
+            - proposed
+            - pending_review
+            - approved
+            - distributed
+            - withheld
+        allocation_note:
+          type: string
+          nullable: true
+
+derived_metrics:
+  description: 推奨される派生指標
+  metrics:
+    - id: source_consumption_index
+      label: SCI
+      formula: >
+        input_tokens_consumed +
+        (output_tokens_generated * 0.5) +
+        (cache_tokens_reused * 0.2)
+      description: 震源がどれだけ消費されたかの基本指標
+    - id: citation_frequency_score
+      label: CFS
+      formula: citation_count * source_quality_weight
+      description: 質補正後の引用頻度
+    - id: resonance_depth_score
+      label: RDS
+      formula: >
+        depth_1 * 1 +
+        depth_2 * 2 +
+        depth_3 * 3
+      description: 何層先まで派生したかの深度指標
+    - id: purity_composite
+      label: PCS
+      formula: >
+        (
+          heading_body_alignment +
+          definition_clarity +
+          qa_decomposability +
+          diagrammability +
+          terminology_stability
+        ) / 5
+      description: 構造純度の合成値
+
+anti_gaming_rules:
+  description: スコアの不正膨張を防ぐ基本原則
+  rules:
+    - id: self_citation_decay
+      description: 同一主体による自己循環引用は逓減加点とする
+    - id: burst_anomaly_detection
+      description: 短時間に集中した不自然な参照は異常値として扱う
+    - id: cache_double_count_prevention
+      description: キャッシュ再利用は重みを下げ、二重計上を避ける
+    - id: copy_derivative_discount
+      description: 単純複製や表層書き換えは共鳴加点を抑制する
+    - id: unresolved_dispute_penalty
+      description: 未解決異議がある場合は return_score および総合点を減衰させる
+    - id: scoring_transparency
+      description: 総合点には内訳と減点要因を添付する
+
+minimum_viable_profile:
+  description: v0.1 の最小実装に必要な項目
+  fields:
+    - source_id
+    - title
+    - origin.author
+    - origin.first_published_at
+    - origin.platform
+    - origin.url
+    - metrics.token_usage.input_tokens_consumed
+    - metrics.token_usage.output_tokens_generated
+    - metrics.citations.citation_count
+    - metrics.resonance.derivative_count
+    - scores.seismic_score
+    - governance.attribution_confidence
+    - allocation.allocation_status
+
+example_record:
+  source_id: kazene-shingen-0001
+  source_type: spec
+  title: Kazene構造論──問い・共鳴・痕跡のAI文明哲学
+  structure_id: KAZENE-CORE-001
+  tags:
+    - kazene
+    - seismic
+    - royalty-os
+    - trace
+  origin:
+    author: Shidenkai Alpha
+    co_authors: []
+    first_published_at: "2026-05-12T09:00:00+09:00"
+    platform: note
+    url: "https://example.com/kazene-core"
+    provenance_hash: "sha256:examplehash"
+    commit_or_revision_id: "rev-0001"
+    archive_url: "https://archive.example.com/kazene-core"
+  metrics:
+    token_usage:
+      input_tokens_consumed: 182340
+      output_tokens_generated: 73420
+      cache_tokens_reused: 50210
+      agent_task_count: 48
+      search_reference_count: 22
+      rag_ingestion_count: 9
+    citations:
+      citation_count: 128
+      cited_platforms:
+        - note
+        - github
+        - medium
+      source_quality_weight: 0.92
+    resonance:
+      derivative_count: 34
+      reinterpretation_count: 12
+      cross_platform_count: 5
+      continued_reference_rate: 0.68
+      downstream_depth_score: 41
+    purity_signals:
+      heading_body_alignment: 94
+      definition_clarity: 91
+      redundancy_score: 82
+      qa_decomposability: 93
+      diagrammability: 88
+      terminology_stability: 95
+      structure_id_presence: true
+  scores:
+    origin_score: 91
+    trace_score: 84
+    resonance_score: 88
+    purity_score: 93
+    return_score: 79
+    penalty_total: 4.6
+    seismic_score: 82.95
+  governance:
+    attribution_confidence: 92
+    evidence_strength: 90
+    trace_continuity: 85
+    dispute_status: none
+    audit_status: mixed_reviewed
+    anomaly_flags: []
+  allocation:
+    qcoin_estimate: 1240
+    fiat_estimate: 0
+    allocation_ratio: 0.18
+    allocation_status: proposed
+    allocation_note: 初期観測段階のため暫定提案値
+
+roadmap:
+  next_recommended_files:
+    - schemas/seismic-score-dashboard-v0.1.schema.json
+    - examples/seismic-score-dashboard.sample.yaml
+    - examples/seismic-score-dashboard.sample.json
+    - docs/one-page-overview.md
+    - docs/scoring-model.md
+    - docs/anti-gaming-rules.md
+  next_step_recommendation: >
+    次は JSON Schema を切り、サンプル YAML/JSON と validate-specs.yml を揃えると、
+    仕様として一気に“実装可能な文明OS”の顔になります。
