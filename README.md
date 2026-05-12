@@ -1,8 +1,8 @@
 # Seismic Score Dashboard v0.1
 
-A draft specification for observing **origin, trace, resonance, structural purity, and return readiness** in one shared coordinate system.
+A draft specification for observing origin, trace, resonance, structural purity, and return readiness in one shared coordinate system.
 
-**Seismic Score Dashboard** is a governance-ready observation layer for value circulation in the AI era.  
+Seismic Score Dashboard is a governance-ready observation layer for value circulation in the AI era.  
 It is designed to help creators, users, and platforms see the same structure from different viewpoints.
 
 ---
@@ -195,9 +195,143 @@ Repository Structure
 │   └── seismic-score-dashboard-v0.1.schema.json
 ├── examples/
 │   └── seismic-score-dashboard.sample.json
+├── docs/
+│   ├── allocation-readiness.md
+│   ├── anti-gaming-rules.md
+│   ├── dispute-handling-notes.md
+│   ├── dispute-registry-relationship.md
+│   ├── one-page-overview.md
+│   ├── relationship-to-royalty-os.md
+│   ├── relationship-to-trace-architecture.md
+│   ├── review-status-notes.md
+│   └── scoring-model.md
 └── .github/
     └── workflows/
         └── validate-specs.yml
+File guide
+spec/seismic-score-dashboard-v0.1.yaml
+人間が読むための原仕様です。
+概念定義、設計原則、観測層、スコア構造、record model をまとめています。
+schemas/seismic-score-dashboard-v0.1.schema.json
+1件の seismic-score record を検証するための JSON Schema です。
+実装・交換・自動検証の基準になります。
+examples/seismic-score-dashboard.sample.json
+Schema に適合するサンプルレコードです。
+最小限の運用イメージを確認できます。
+docs/one-page-overview.md
+本仕様の全体像を短く把握するための概要文書です。
+docs/scoring-model.md
+Origin / Trace / Resonance / Purity / Return の5層スコアと、
+合成式・解釈指針・補助指標を整理した中核文書です。
+docs/anti-gaming-rules.md
+自己循環引用、burst、copy-derivative、二重計上などへの防御原則を整理した文書です。
+docs/relationship-to-royalty-os.md
+Seismic Score Dashboard を、Royalty OS の前段にある観測層として位置づける接続文書です。
+docs/relationship-to-trace-architecture.md
+Trace Architecture を記録層、Dashboard を読解層として分離するための接続文書です。
+docs/dispute-handling-notes.md
+dispute を score と readiness にどう反映するかを整理した異議処理メモです。
+docs/allocation-readiness.md
+record がどの程度「返せる状態」にあるかを示す readiness の考え方を整理した文書です。
+docs/review-status-notes.md
+score がどの程度レビュー済みかを示す review status の設計メモです。
+docs/dispute-registry-relationship.md
+Dispute Registry を異議の台帳、Dashboard を影響表示層として切り分ける接続文書です。
+.github/workflows/validate-specs.yml
+YAML spec の読込確認と、JSON Schema / sample record の自動検証を行う GitHub Actions workflow です。
+Start Here
+
+はじめて読む場合は、次の順番がいちばん分かりやすいです。
+
+1. Quick entry
+
+最初に全体像をつかみたい場合:
+
+docs/one-page-overview.md
+README.md
+
+ここで、このリポジトリが
+「価値循環を観測する仕様」 であり、
+「分配そのものを実行するOSではない」
+ことが分かります。
+
+2. Core specification
+
+仕様の中核を読みたい場合:
+
+spec/seismic-score-dashboard-v0.1.yaml
+docs/scoring-model.md
+docs/anti-gaming-rules.md
+
+ここで、
+
+何を観測するのか
+どうスコア化するのか
+どう不正膨張を抑えるのか
+
+が分かります。
+
+3. Implementation entry
+
+実装や検証から入りたい場合:
+
+schemas/seismic-score-dashboard-v0.1.schema.json
+examples/seismic-score-dashboard.sample.json
+.github/workflows/validate-specs.yml
+
+ここで、
+
+record の形
+検証対象
+GitHub Actions 上での validation flow
+
+を確認できます。
+
+4. Governance-oriented reading path
+
+制度接続や運用面を深く見たい場合:
+
+docs/dispute-handling-notes.md
+docs/allocation-readiness.md
+docs/review-status-notes.md
+docs/dispute-registry-relationship.md
+
+ここで、
+
+異議がある場合どう扱うか
+readiness をどう読むか
+review 状態をどう見せるか
+dispute registry とどう接続するか
+
+がつながります。
+
+5. Relationship reading path
+
+他のOSや記録層との接続を見たい場合:
+
+docs/relationship-to-trace-architecture.md
+docs/relationship-to-royalty-os.md
+docs/dispute-registry-relationship.md
+
+ここで、Seismic Score Dashboard が
+
+Trace Architecture の上に立つ観測層であり
+Royalty OS の前段にある pre-allocation layer であり
+Dispute Registry と接続する影響表示層である
+
+ことが整理できます。
+
+6. Minimal practical route
+
+最短で仕様の雰囲気だけ掴みたい場合:
+
+docs/one-page-overview.md
+examples/seismic-score-dashboard.sample.json
+docs/scoring-model.md
+
+この3つだけでも、
+「何を観測し、どんな record を持ち、どう読むのか」がだいたい見えます。
+
 Specification Files
 spec/seismic-score-dashboard-v0.1.yaml
 
@@ -216,7 +350,7 @@ Schema に適合するサンプルレコードです。
 
 .github/workflows/validate-specs.yml
 
-GitHub Actions 上で schema と sample を自動検証するワークフローです。
+GitHub Actions 上で spec / schema / sample を自動検証するワークフローです。
 
 Record Model
 
@@ -309,10 +443,11 @@ URI / date-time 形式が正しいか
 GitHub Actions Validation
 
 validate-specs.yml では、
-schema と sample を GitHub Actions 上で自動検証できます。
+spec / schema / sample を GitHub Actions 上で自動検証できます。
 
 これにより、少なくとも以下を継続的に確認できます。
 
+spec の読込破損
 schema の破損
 sample の不整合
 誤ったフィールド追加
@@ -379,13 +514,11 @@ Roadmap
 
 次に追加すると自然なもの:
 
-examples/seismic-score-dashboard.sample.yaml
-docs/one-page-overview.md
-docs/scoring-model.md
-docs/anti-gaming-rules.md
 複数レコード用の collection schema
 可視化用ダッシュボード定義
 allocation simulation 層の拡張
+governance bridge 関連文書
+review / audit 補助フィールドの拡張
 Relationship to Royalty OS
 
 Seismic Score Dashboard は、
